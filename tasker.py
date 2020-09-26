@@ -1,6 +1,11 @@
+# This program was created to simply save todo list to a file named notes.txt and completed liat to completed.txt
+# displays contents of each list.
+# used click so that we dont have to worry about invalid commmands and easy cli for the user
+
 import click
-from datetime import date
+from datetime import datetime
 from sys import path
+
 @click.group()
 def start():
 	''' Commandline todo manager '''
@@ -20,22 +25,23 @@ def list(c):
 		for line in files:
 			line=line.rstrip()
 			counter += 1
-			click.secho(line,nl=1,fg='blue')
+			click.secho(f"{counter} {line}",nl=1,fg='blue')
 			
 @click.command()
 @click.argument('item')
 def create(item):
 	''' To create an item '''
-	today = date.today()
-	todos_file = path[0]+'\nnotes.txt'
+	#today = date.today()
+	today = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	todos_file = path[0]+'/notes.txt'
 	with open(todos_file,'a') as files:
-		files.write(f"\n{today}\t{item}")
+		files.write(f"{today}\t{item}\n")
 
 @click.command()
 @click.argument('del_ind',type=int)
 def delete(del_ind):
 	''' To delete an accidently created item '''
-	todos_file = path[0]+'\nnotes.txt'
+	todos_file = path[0]+'/notes.txt'
 	with open(todos_file,'r') as files:
 		lines = files.readlines()
 	count=0
@@ -52,8 +58,8 @@ def delete(del_ind):
 @click.argument('comp_ind',type=int)
 def completed(comp_ind):
 	''' Mark an item as completed '''
-	todos_file = path[0]+'\nnotes.txt'
-	compls_file = path[0]+'\ncompleted.txt'
+	todos_file = path[0]+'/notes.txt'
+	compls_file = path[0]+'/completed.txt'
 	with open(todos_file,'r') as files:
 		lines = files.readlines()
 	count=0
@@ -63,10 +69,13 @@ def completed(comp_ind):
 			if(count!=comp_ind):
 				files.write(line)
 			else:
-				del_line = line + date.today()
+				del_line = line
+				#today = date.today()
+				today = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				with open(compls_file,'a') as f:
-					f.write(del_line)
-				click.secho(f"marked the item {del_line} as completed",fg="green")
+					f.write(f"{del_line} {today}")
+				del_line = del_line.strip()
+				click.secho(f"marked the item \t{del_line} as completed",fg="green")
 
 
 start.add_command(list)
