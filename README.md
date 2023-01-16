@@ -15,3 +15,7 @@ to create a todo item <b>python tasker.py create "list item" </b>
 </pre>
 
 never put any sensitive information in it
+
+### Future work
+
+* Integration with google tasks
